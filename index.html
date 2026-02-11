@@ -42,7 +42,8 @@
       background:#22c55e; color:#052e16; font-size:16px; font-weight:900; cursor:pointer; }
 
     .drawer{ position:fixed; top:0; left:0; bottom:0; width:260px; background:#020617;
-      border-right:1px solid #0f172a; transform:translateX(-110%); transition:transform .2s ease; z-index:30; padding:12px; }
+      border-right:1px solid #0f172a; transform:translateX(-110%);
+      transition:transform .2s ease; z-index:30; padding:12px; }
     .drawer.show{ transform:translateX(0); }
     .drawer h4{ margin:10px 0; } .drawer .item{ padding:10px; border-radius:8px; cursor:pointer; }
     .drawer .item:hover{ background:#0b1220; }
@@ -52,6 +53,7 @@
   </style>
 </head>
 <body>
+  <!-- PIN -->
   <div id="pinScreen" class="pin-screen">
     <div class="pin-box">
       <h3>Enter PIN</h3>
@@ -61,12 +63,14 @@
     </div>
   </div>
 
+  <!-- Drawer -->
   <div id="drawer" class="drawer">
     <h4>Menu</h4>
     <div class="item">My Profile</div>
     <div class="item">Edit Profile</div>
     <div class="item" onclick="logout()">Logout</div>
   </div>
+  <div id="drawerOverlay" class="overlay" onclick="closeDrawer()"></div>
 
   <header>
     <div class="hamburger" onclick="toggleDrawer()">☰</div>
@@ -76,7 +80,7 @@
   <main id="groups">Loading…</main>
 
   <button class="fab" onclick="toggleSheet()">＋</button>
-  <div id="overlay" class="overlay" onclick="closeSheet()"></div>
+  <div id="sheetOverlay" class="overlay" onclick="closeSheet()"></div>
 
   <section id="sheet" class="sheet">
     <h3>Add My Details</h3>
@@ -106,22 +110,35 @@
 
     function unlock(){
       if(pinInput.value === PIN){
-        document.getElementById("pinScreen").style.display = "none";
-        UserID.value = CURRENT_USER_ID; // lock to this user
+        pinScreen.style.display = "none";
+        UserID.value = CURRENT_USER_ID;
       } else pinError.innerText = "Wrong PIN";
     }
-    function logout(){ document.getElementById("pinScreen").style.display = "flex"; toggleDrawer(); }
+    function logout(){ pinScreen.style.display = "flex"; closeDrawer(); }
 
-    function toggleDrawer(){ drawer.classList.toggle("show"); }
-    function toggleSheet(){ sheet.classList.toggle("show"); overlay.classList.toggle("show"); }
-    function closeSheet(){ sheet.classList.remove("show"); overlay.classList.remove("show"); }
+    function toggleDrawer(){
+      drawer.classList.toggle("show");
+      drawerOverlay.classList.toggle("show");
+    }
+    function closeDrawer(){
+      drawer.classList.remove("show");
+      drawerOverlay.classList.remove("show");
+    }
+
+    function toggleSheet(){
+      sheet.classList.toggle("show");
+      sheetOverlay.classList.toggle("show");
+    }
+    function closeSheet(){
+      sheet.classList.remove("show");
+      sheetOverlay.classList.remove("show");
+    }
 
     async function loadMembers(){
       const res = await fetch(API_URL + "?action=list");
       const data = await res.json();
       const groups = { BISHUDDHI:[], ANAHAT:[], MANIPUR:[], SWADISTHAN:[], MULADHAR:[] };
       data.forEach(m => { const g=(m["Group"]||"").toUpperCase(); if(groups[g]) groups[g].push(m); });
-
       groupsEl.innerHTML = `
         ${renderGroup("BISHUDDHI","g-blue",groups.BISHUDDHI)}
         ${renderGroup("ANAHAT","g-green",groups.ANAHAT)}
@@ -165,5 +182,6 @@
   </script>
 </body>
 </html>
+
 
 
