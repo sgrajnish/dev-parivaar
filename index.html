@@ -6,54 +6,43 @@
   <title>Dev Parivaar</title>
   <meta name="theme-color" content="#0f172a" />
   <style>
-    * { box-sizing: border-box; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:#020617; color:#e5e7eb; font-size:18px; line-height:1.5; }
-    header { position:sticky; top:0; display:flex; align-items:center; gap:10px;
-      background:#020617; padding:12px 14px; border-bottom:1px solid #0f172a; z-index:10;
-      font-weight:800; font-size:20px; }
-    .hamburger { font-size:24px; cursor:pointer; user-select:none; }
-    main { padding:12px 12px 96px; max-width:900px; margin:0 auto; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#020617;color:#e5e7eb;font-size:18px;line-height:1.5}
+    header{position:sticky;top:0;display:flex;align-items:center;gap:10px;background:#020617;padding:12px 14px;border-bottom:1px solid #0f172a;z-index:10;font-weight:800;font-size:20px}
+    .hamburger{font-size:24px;cursor:pointer;user-select:none}
+    main{padding:12px 12px 96px;max-width:900px;margin:0 auto}
 
-    .group { margin-bottom:14px; }
-    .group h3 { margin:10px 0; padding:8px 12px; border-radius:10px; font-size:16px; color:#020617; font-weight:900; }
-    .g-blue{background:#7dd3fc;} .g-green{background:#86efac;} .g-yellow{background:#fde047;}
-    .g-orange{background:#fb923c;} .g-red{background:#ef4444;}
+    .group{margin-bottom:14px}
+    .group h3{margin:10px 0;padding:8px 12px;border-radius:10px;font-size:16px;color:#020617;font-weight:900}
+    .g-blue{background:#7dd3fc}.g-green{background:#86efac}.g-yellow{background:#fde047}.g-orange{background:#fb923c}.g-red{background:#ef4444}.g-white{background:#fff}.g-grey{background:#e5e7eb}
 
-    .card { background:#0b1220; border:1px solid #0f172a; border-radius:14px; padding:14px; margin:10px 0; }
-    .name { font-size:18px; font-weight:900; } .meta{color:#94a3b8; margin-top:6px;}
+    .card{background:#0b1220;border:1px solid #0f172a;border-radius:14px;padding:14px;margin:10px 0}
+    .name{font-size:18px;font-weight:900}.meta{color:#94a3b8;margin-top:6px}
 
-    .fab { position:fixed; right:16px; bottom:16px; width:64px; height:64px; border-radius:50%;
-      border:none; font-size:34px; font-weight:900; background:#22c55e; color:#052e16;
-      box-shadow:0 12px 24px rgba(34,197,94,.35); cursor:pointer; z-index:20; }
+    .fab{position:fixed;right:16px;bottom:16px;width:64px;height:64px;border-radius:50%;border:none;font-size:34px;font-weight:900;background:#22c55e;color:#052e16;box-shadow:0 12px 24px rgba(34,197,94,.35);cursor:pointer;z-index:20}
 
-    .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; z-index:19; }
-    .overlay.show{ display:block; }
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;z-index:19}
+    .overlay.show{display:block}
 
-    .sheet{ position:fixed; left:0; right:0; bottom:0; background:#020617;
-      border-top-left-radius:18px; border-top-right-radius:18px; padding:12px;
-      transform:translateY(110%); transition:transform .2s ease; z-index:20; max-height:90vh; overflow-y:auto; }
-    .sheet.show{ transform:translateY(0); }
-    .sheet h3{ margin:8px 4px 10px; font-size:20px; }
+    .sheet{position:fixed;left:0;right:0;bottom:0;background:#020617;border-top-left-radius:18px;border-top-right-radius:18px;padding:12px;transform:translateY(110%);transition:transform .2s ease;z-index:20;max-height:90vh;overflow-y:auto}
+    .sheet.show{transform:translateY(0)}
 
-    .field{ width:100%; padding:12px; margin:6px 0; border-radius:10px; border:1px solid #0f172a;
-      background:#0b1220; color:#e5e7eb; font-size:16px; }
-    .btn{ width:100%; padding:12px; margin:10px 0 4px; border-radius:12px; border:none;
-      background:#22c55e; color:#052e16; font-size:16px; font-weight:900; cursor:pointer; }
+    .field{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #0f172a;background:#0b1220;color:#e5e7eb;font-size:16px}
+    .btn{width:100%;padding:12px;margin:10px 0 4px;border-radius:12px;border:none;background:#22c55e;color:#052e16;font-size:16px;font-weight:900;cursor:pointer}
 
-    .drawer{ position:fixed; top:0; left:0; bottom:0; width:260px; background:#020617;
-      border-right:1px solid #0f172a; transform:translateX(-110%);
-      transition:transform .2s ease; z-index:30; padding:12px; }
-    .drawer.show{ transform:translateX(0); }
-    .drawer h4{ margin:10px 0; } .drawer .item{ padding:10px; border-radius:8px; cursor:pointer; }
-    .drawer .item:hover{ background:#0b1220; }
+    .drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:#020617;border-right:1px solid #0f172a;transform:translateX(-110%);transition:transform .2s ease;z-index:30;padding:12px}
+    .drawer.show{transform:translateX(0)}
+    .drawer .item{padding:10px;border-radius:8px;cursor:pointer}
+    .drawer .item:hover{background:#0b1220}
 
-    .pin-screen{ position:fixed; inset:0; background:#020617; display:flex; align-items:center; justify-content:center; z-index:50; }
-    .pin-box{ background:#0b1220; border:1px solid #0f172a; border-radius:14px; padding:16px; width:90%; max-width:360px; }
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:900;background:#fb923c;color:#fff;animation:flash 1s infinite}
+    @keyframes flash{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+
+    .pin-screen{position:fixed;inset:0;background:#020617;display:flex;align-items:center;justify-content:center;z-index:50}
+    .pin-box{background:#0b1220;border:1px solid #0f172a;border-radius:14px;padding:16px;width:90%;max-width:360px}
   </style>
 </head>
 <body>
-  <!-- PIN -->
   <div id="pinScreen" class="pin-screen">
     <div class="pin-box">
       <h3>Enter PIN</h3>
@@ -63,9 +52,8 @@
     </div>
   </div>
 
-  <!-- Drawer -->
   <div id="drawer" class="drawer">
-    <h4>Menu</h4>
+    <div class="item" id="totalBox"></div>
     <div class="item">My Profile</div>
     <div class="item">Edit Profile</div>
     <div class="item" onclick="logout()">Logout</div>
@@ -84,16 +72,13 @@
 
   <section id="sheet" class="sheet">
     <h3>Add My Details</h3>
-    <input class="field" id="UserID" placeholder="User ID (locked)" disabled />
+    <input class="field" id="UserID" disabled />
     <input class="field" id="Name" placeholder="Name" />
     <input class="field" id="Mobile" placeholder="Mobile" />
-    <input class="field" id="DOB" placeholder="D.O.B (DD-MM-YYYY)" />
+    <input class="field" id="DOB" placeholder="D.O.B" />
     <select class="field" id="Group">
-      <option value="BISHUDDHI">BISHUDDHI</option>
-      <option value="ANAHAT">ANAHAT</option>
-      <option value="MANIPUR">MANIPUR</option>
-      <option value="SWADISTHAN">SWADISTHAN</option>
-      <option value="MULADHAR">MULADHAR</option>
+      <option>BISHUDDHI</option><option>ANAHAT</option><option>MANIPUR</option>
+      <option>SWADISTHAN</option><option>MULADHAR</option><option>NANDI</option><option>SAHAJA</option>
     </select>
     <input class="field" id="State" placeholder="State" />
     <input class="field" id="District" placeholder="District" />
@@ -105,76 +90,62 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzVSks1rUQSQQrnplpyd3hFFoWd8VNnY2y4Faf5O0p6c3vXLr_V_AWBqLvgqlHh6PNGJw/exec";
-    const PIN = "1234"; // change
-    let CURRENT_USER_ID = "USER-" + Math.floor(Math.random()*1000000);
+    const PIN = "7391";
 
-    function unlock(){
-      if(pinInput.value === PIN){
-        pinScreen.style.display = "none";
-        UserID.value = CURRENT_USER_ID;
-      } else pinError.innerText = "Wrong PIN";
-    }
-    function logout(){ pinScreen.style.display = "flex"; closeDrawer(); }
+    let UID = localStorage.getItem("DP_UID");
+    if(!UID){ UID = "DP-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); localStorage.setItem("DP_UID", UID); }
 
-    function toggleDrawer(){
-      drawer.classList.toggle("show");
-      drawerOverlay.classList.toggle("show");
-    }
-    function closeDrawer(){
-      drawer.classList.remove("show");
-      drawerOverlay.classList.remove("show");
-    }
+    function unlock(){ if(pinInput.value===PIN){ pinScreen.style.display="none"; UserID.value=UID; } else pinError.innerText="Wrong PIN"; }
+    function logout(){ pinScreen.style.display="flex"; closeDrawer(); }
 
-    function toggleSheet(){
-      sheet.classList.toggle("show");
-      sheetOverlay.classList.toggle("show");
-    }
-    function closeSheet(){
-      sheet.classList.remove("show");
-      sheetOverlay.classList.remove("show");
-    }
+    function toggleDrawer(){ drawer.classList.toggle("show"); drawerOverlay.classList.toggle("show"); }
+    function closeDrawer(){ drawer.classList.remove("show"); drawerOverlay.classList.remove("show"); }
+
+    function toggleSheet(){ sheet.classList.toggle("show"); sheetOverlay.classList.toggle("show"); UserID.value=UID; history.pushState({sheet:1},""); }
+    function closeSheet(){ sheet.classList.remove("show"); sheetOverlay.classList.remove("show"); if(history.state?.sheet) history.back(); }
+
+    window.addEventListener("popstate",()=>{ closeSheet(); });
 
     async function loadMembers(){
-      const res = await fetch(API_URL + "?action=list");
+      const res = await fetch(API_URL+"?action=list");
       const data = await res.json();
-      const groups = { BISHUDDHI:[], ANAHAT:[], MANIPUR:[], SWADISTHAN:[], MULADHAR:[] };
-      data.forEach(m => { const g=(m["Group"]||"").toUpperCase(); if(groups[g]) groups[g].push(m); });
+      totalBox.innerHTML = `Total Members <span class="badge">${data.length}</span>`;
+      data.sort((a,b)=> (a["Name"]||"").localeCompare(b["Name"]||""));
+
+      const groups = {BISHUDDHI:[],ANAHAT:[],MANIPUR:[],SWADISTHAN:[],MULADHAR:[],NANDI:[],SAHAJA:[]};
+      data.forEach(m=>{ const g=(m["Group"]||"").toUpperCase(); if(groups[g]) groups[g].push(m); });
+
       groupsEl.innerHTML = `
-        ${renderGroup("BISHUDDHI","g-blue",groups.BISHUDDHI)}
-        ${renderGroup("ANAHAT","g-green",groups.ANAHAT)}
-        ${renderGroup("MANIPUR","g-yellow",groups.MANIPUR)}
-        ${renderGroup("SWADISTHAN","g-orange",groups.SWADISTHAN)}
-        ${renderGroup("MULADHAR","g-red",groups.MULADHAR)}
+        ${render("BISHUDDHI","g-blue",groups.BISHUDDHI)}
+        ${render("ANAHAT","g-green",groups.ANAHAT)}
+        ${render("MANIPUR","g-yellow",groups.MANIPUR)}
+        ${render("SWADISTHAN","g-orange",groups.SWADISTHAN)}
+        ${render("MULADHAR","g-red",groups.MULADHAR)}
+        ${render("NANDI","g-white",groups.NANDI)}
+        ${render("SAHAJA","g-grey",groups.SAHAJA)}
       `;
     }
-    function renderGroup(title, cls, arr){
-      return `<div class="group">
-        <h3 class="${cls}">${title}</h3>
-        ${arr.map(m=>`
-          <div class="card">
-            <div class="name">${m["Name"]} (${m["User ID"]})</div>
-            <div class="meta">📞 ${m["Mobile"]} · 🎂 ${m["D.O.B"]}</div>
-            <div class="meta">${m["State"]}, ${m["District"]}, ${m["Block"]}</div>
-            <div class="meta">${m["GP/Ward"]}, ${m["Village/Town"]}</div>
-          </div>`).join("") || `<div class="meta">No members</div>`}
-      </div>`;
+
+    function render(title,cls,arr){
+      return `<div class="group"><h3 class="${cls}">${title}</h3>` + 
+        (arr.map(m=>{
+          const isMe = m["User ID"]===UID;
+          return `<div class="card">
+            <div class="name">${m["Name"]}</div>
+            <div class="meta">${m["State"]||""}, ${m["District"]||""}, ${m["Block"]||""}</div>
+            ${isMe ? `<div class="meta">📞 ${m["Mobile"]} · 🎂 ${m["D.O.B"]}</div>` : ``}
+          </div>`;
+        }).join("") || `<div class="meta">No members</div>`) + `</div>`;
     }
 
     async function addMember(){
       const payload = {
-        "User ID": CURRENT_USER_ID,
-        "Name": Name.value,
-        "Mobile": Mobile.value,
-        "D.O.B": DOB.value,
-        "Group": Group.value,
-        "State": State.value,
-        "District": District.value,
-        "Block": Block.value,
-        "GP/Ward": GPWard.value,
-        "Village/Town": VillageTown.value
+        "User ID": UID, "Name": Name.value, "Mobile": Mobile.value, "D.O.B": DOB.value,
+        "Group": Group.value, "State": State.value, "District": District.value,
+        "Block": Block.value, "GP/Ward": GPWard.value, "Village/Town": VillageTown.value
       };
-      await fetch(API_URL,{ method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
-      closeSheet(); loadMembers(); alert("Saved your details");
+      await fetch(API_URL, { method:"POST", mode:"cors", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      closeSheet(); loadMembers(); alert("Saved");
     }
 
     const groupsEl = document.getElementById("groups");
@@ -182,6 +153,7 @@
   </script>
 </body>
 </html>
+
 
 
 
