@@ -40,6 +40,10 @@
 
     .pin-screen{position:fixed;inset:0;background:#020617;display:flex;align-items:center;justify-content:center;z-index:50}
     .pin-box{background:#0b1220;border:1px solid #0f172a;border-radius:14px;padding:16px;width:90%;max-width:360px}
+
+    .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#22c55e;color:#052e16;
+      padding:10px 14px;border-radius:10px;font-weight:900;display:none;z-index:60}
+    .toast.show{display:block}
   </style>
 </head>
 <body>
@@ -54,8 +58,8 @@
 
   <div id="drawer" class="drawer">
     <div class="item" id="totalBox"></div>
-    <div class="item">My Profile</div>
-    <div class="item">Edit Profile</div>
+    <div class="item" onclick="openProfile()">My Profile</div>
+    <div class="item" onclick="openEdit()">Edit Profile</div>
     <div class="item" onclick="logout()">Logout</div>
   </div>
   <div id="drawerOverlay" class="overlay" onclick="closeDrawer()"></div>
@@ -71,7 +75,7 @@
   <div id="sheetOverlay" class="overlay" onclick="closeSheet()"></div>
 
   <section id="sheet" class="sheet">
-    <h3>Add My Details</h3>
+    <h3 id="sheetTitle">Add My Details</h3>
     <input class="field" id="UserID" disabled />
     <input class="field" id="Name" placeholder="Name" />
     <input class="field" id="Mobile" placeholder="Mobile" />
@@ -85,8 +89,10 @@
     <input class="field" id="Block" placeholder="Block" />
     <input class="field" id="GPWard" placeholder="GP/Ward" />
     <input class="field" id="VillageTown" placeholder="Village/Town" />
-    <button class="btn" onclick="addMember()">Save</button>
+    <button class="btn" id="saveBtn" onclick="saveOrUpdate()">Save</button>
   </section>
+
+  <div id="toast" class="toast"></div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzVSks1rUQSQQrnplpyd3hFFoWd8VNnY2y4Faf5O0p6c3vXLr_V_AWBqLvgqlHh6PNGJw/exec";
@@ -95,7 +101,15 @@
     let UID = localStorage.getItem("DP_UID");
     if(!UID){ UID = "DP-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); localStorage.setItem("DP_UID", UID); }
 
-    function unlock(){ if(pinInput.value===PIN){ pinScreen.style.display="none"; UserID.value=UID; } else pinError.innerText="Wrong PIN"; }
+    let ALL = [];
+
+    function toast(msg){
+      const t=document.getElementById("toast");
+      t.innerText=msg; t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"),1500);
+    }
+
+    function unlock(){ if(pinInput.value===PIN){ pinScreen.style.display="none"; UserID.value=UID; loadMembers(); } else pinError.innerText="Wrong PIN"; }
     function logout(){ pinScreen.style.display="flex"; closeDrawer(); }
 
     function toggleDrawer(){ drawer.classList.toggle("show"); drawerOverlay.classList.toggle("show"); }
@@ -108,12 +122,12 @@
 
     async function loadMembers(){
       const res = await fetch(API_URL+"?action=list");
-      const data = await res.json();
-      totalBox.innerHTML = `Total Members <span class="badge">${data.length}</span>`;
-      data.sort((a,b)=> (a["Name"]||"").localeCompare(b["Name"]||""));
+      ALL = await res.json();
+      totalBox.innerHTML = `Total Members <span class="badge">${ALL.length}</span>`;
+      ALL.sort((a,b)=>(a["Name"]||"").localeCompare(b["Name"]||""));
 
       const groups = {BISHUDDHI:[],ANAHAT:[],MANIPUR:[],SWADISTHAN:[],MULADHAR:[],NANDI:[],SAHAJA:[]};
-      data.forEach(m=>{ const g=(m["Group"]||"").toUpperCase(); if(groups[g]) groups[g].push(m); });
+      ALL.forEach(m=>{ const g=(m["Group"]||"").toUpperCase(); if(groups[g]) groups[g].push(m); });
 
       groupsEl.innerHTML = `
         ${render("BISHUDDHI","g-blue",groups.BISHUDDHI)}
@@ -127,33 +141,69 @@
     }
 
     function render(title,cls,arr){
-      return `<div class="group"><h3 class="${cls}">${title}</h3>` + 
+      return `<div class="group"><h3 class="${cls}">${title}</h3>` +
         (arr.map(m=>{
           const isMe = m["User ID"]===UID;
           return `<div class="card">
-            <div class="name">${m["Name"]}</div>
-            <div class="meta">${m["State"]||""}, ${m["District"]||""}, ${m["Block"]||""}</div>
-            ${isMe ? `<div class="meta">📞 ${m["Mobile"]} · 🎂 ${m["D.O.B"]}</div>` : ``}
+            <div class="name">${m["Name"]||""}</div>
+            <div class="meta">${m["State"]||""}, ${m["District"]||""}, ${m["Block"]||""}, ${m["GP/Ward"]||""}, ${m["Village/Town"]||""}</div>
+            ${isMe ? `<div class="meta">📞 ${m["Mobile"]||""} · 🎂 ${m["D.O.B"]||""}</div>` : ``}
           </div>`;
         }).join("") || `<div class="meta">No members</div>`) + `</div>`;
     }
 
-    async function addMember(){
-      const payload = {
-        "User ID": UID, "Name": Name.value, "Mobile": Mobile.value, "D.O.B": DOB.value,
-        "Group": Group.value, "State": State.value, "District": District.value,
-        "Block": Block.value, "GP/Ward": GPWard.value, "Village/Town": VillageTown.value
+    function openProfile(){
+      closeDrawer();
+      const me = ALL.find(m=>m["User ID"]===UID);
+      if(!me){ toast("No profile found. Add your details."); return; }
+      sheetTitle.innerText="My Profile";
+      Name.value=me["Name"]||""; Mobile.value=me["Mobile"]||""; DOB.value=me["D.O.B"]||""; Group.value=me["Group"]||"";
+      State.value=me["State"]||""; District.value=me["District"]||""; Block.value=me["Block"]||""; GPWard.value=me["GP/Ward"]||""; VillageTown.value=me["Village/Town"]||"";
+      saveBtn.innerText="Close";
+      saveBtn.onclick=()=>closeSheet();
+      toggleSheet();
+    }
+
+    function openEdit(){
+      closeDrawer();
+      const me = ALL.find(m=>m["User ID"]===UID);
+      sheetTitle.innerText="Edit Profile";
+      if(me){
+        Name.value=me["Name"]||""; Mobile.value=me["Mobile"]||""; DOB.value=me["D.O.B"]||""; Group.value=me["Group"]||"";
+        State.value=me["State"]||""; District.value=me["District"]||""; Block.value=me["Block"]||""; GPWard.value=me["GP/Ward"]||""; VillageTown.value=me["Village/Town"]||"";
+      }
+      saveBtn.innerText="Save Changes";
+      saveBtn.onclick=updateProfile;
+      toggleSheet();
+    }
+
+    async function saveOrUpdate(){
+      const me = ALL.find(m=>m["User ID"]===UID);
+      if(me){ await updateProfile(); }
+      else { await addProfile(); }
+    }
+
+    async function addProfile(){
+      const payload = collect();
+      await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      closeSheet(); await loadMembers(); toast("SAVED SUCCESSFULLY");
+    }
+
+    async function updateProfile(){
+      // backend update requires row index; simplest is append new & keep latest as source of truth
+      const payload = collect();
+      await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      closeSheet(); await loadMembers(); toast("UPDATED");
+    }
+
+    function collect(){
+      return {
+        "User ID": UID,"Name":Name.value,"Mobile":Mobile.value,"D.O.B":DOB.value,"Group":Group.value,
+        "State":State.value,"District":District.value,"Block":Block.value,"GP/Ward":GPWard.value,"Village/Town":VillageTown.value
       };
-      await fetch(API_URL, { method:"POST", mode:"cors", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
-      closeSheet(); loadMembers(); alert("Saved");
     }
 
     const groupsEl = document.getElementById("groups");
-    loadMembers();
   </script>
 </body>
 </html>
-
-
-
-
