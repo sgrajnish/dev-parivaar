@@ -47,6 +47,7 @@
   </style>
 </head>
 <body>
+  <!-- PIN -->
   <div id="pinScreen" class="pin-screen">
     <div class="pin-box">
       <h3>Enter PIN</h3>
@@ -56,6 +57,7 @@
     </div>
   </div>
 
+  <!-- Drawer -->
   <div id="drawer" class="drawer">
     <div class="item" id="totalBox"></div>
     <div class="item" onclick="openProfile()">My Profile</div>
@@ -117,7 +119,6 @@
 
     function toggleSheet(){ sheet.classList.toggle("show"); sheetOverlay.classList.toggle("show"); UserID.value=UID; history.pushState({sheet:1},""); }
     function closeSheet(){ sheet.classList.remove("show"); sheetOverlay.classList.remove("show"); if(history.state?.sheet) history.back(); }
-
     window.addEventListener("popstate",()=>{ closeSheet(); });
 
     async function loadMembers(){
@@ -159,8 +160,7 @@
       sheetTitle.innerText="My Profile";
       Name.value=me["Name"]||""; Mobile.value=me["Mobile"]||""; DOB.value=me["D.O.B"]||""; Group.value=me["Group"]||"";
       State.value=me["State"]||""; District.value=me["District"]||""; Block.value=me["Block"]||""; GPWard.value=me["GP/Ward"]||""; VillageTown.value=me["Village/Town"]||"";
-      saveBtn.innerText="Close";
-      saveBtn.onclick=()=>closeSheet();
+      saveBtn.innerText="Close"; saveBtn.onclick=()=>closeSheet();
       toggleSheet();
     }
 
@@ -172,15 +172,14 @@
         Name.value=me["Name"]||""; Mobile.value=me["Mobile"]||""; DOB.value=me["D.O.B"]||""; Group.value=me["Group"]||"";
         State.value=me["State"]||""; District.value=me["District"]||""; Block.value=me["Block"]||""; GPWard.value=me["GP/Ward"]||""; VillageTown.value=me["Village/Town"]||"";
       }
-      saveBtn.innerText="Save Changes";
-      saveBtn.onclick=updateProfile;
+      saveBtn.innerText="Save Changes"; saveBtn.onclick=updateProfile;
       toggleSheet();
     }
 
     async function saveOrUpdate(){
       const me = ALL.find(m=>m["User ID"]===UID);
-      if(me){ await updateProfile(); }
-      else { await addProfile(); }
+      if(me) await updateProfile();
+      else await addProfile();
     }
 
     async function addProfile(){
@@ -190,20 +189,19 @@
     }
 
     async function updateProfile(){
-      // backend update requires row index; simplest is append new & keep latest as source of truth
       const payload = collect();
+      payload._action = "update";
       await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
       closeSheet(); await loadMembers(); toast("UPDATED");
     }
 
     function collect(){
-      return {
-        "User ID": UID,"Name":Name.value,"Mobile":Mobile.value,"D.O.B":DOB.value,"Group":Group.value,
-        "State":State.value,"District":District.value,"Block":Block.value,"GP/Ward":GPWard.value,"Village/Town":VillageTown.value
-      };
+      return {"User ID":UID,"Name":Name.value,"Mobile":Mobile.value,"D.O.B":DOB.value,"Group":Group.value,
+              "State":State.value,"District":District.value,"Block":Block.value,"GP/Ward":GPWard.value,"Village/Town":VillageTown.value};
     }
 
     const groupsEl = document.getElementById("groups");
   </script>
 </body>
 </html>
+
