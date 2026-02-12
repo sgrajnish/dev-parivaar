@@ -7,57 +7,33 @@
   <meta name="theme-color" content="#0f172a" />
   <style>
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#020617;color:#e5e7eb;font-size:18px;line-height:1.5}
-    header{position:sticky;top:0;display:flex;align-items:center;gap:10px;background:#020617;padding:12px 14px;border-bottom:1px solid #0f172a;z-index:10;font-weight:800;font-size:20px}
-    .hamburger{font-size:24px;cursor:pointer;user-select:none}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#020617;color:#e5e7eb}
+    header{position:sticky;top:0;display:flex;align-items:center;gap:10px;background:#020617;padding:12px 14px;border-bottom:1px solid #0f172a;font-weight:800}
+    .hamburger{font-size:24px;cursor:pointer}
     main{padding:12px 12px 96px;max-width:900px;margin:0 auto}
-
     .group{margin-bottom:14px}
-    .group h3{margin:10px 0;padding:8px 12px;border-radius:10px;font-size:16px;color:#020617;font-weight:900}
+    .group h3{margin:10px 0;padding:8px 12px;border-radius:10px;color:#020617;font-weight:900}
     .g-blue{background:#7dd3fc}.g-green{background:#86efac}.g-yellow{background:#fde047}.g-orange{background:#fb923c}.g-red{background:#ef4444}.g-white{background:#fff}.g-grey{background:#e5e7eb}
-
-    .card{background:#0b1220;border:1px solid #0f172a;border-radius:14px;padding:14px;margin:10px 0}
-    .name{font-size:18px;font-weight:900}.meta{color:#94a3b8;margin-top:6px}
-
-    .fab{position:fixed;right:16px;bottom:16px;width:64px;height:64px;border-radius:50%;border:none;font-size:34px;font-weight:900;background:#22c55e;color:#052e16;box-shadow:0 12px 24px rgba(34,197,94,.35);cursor:pointer;z-index:20}
-
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;z-index:19}
+    .card{background:#0b1220;border:1px solid #0f172a;border-radius:14px;padding:12px;margin:8px 0}
+    .name{font-weight:900}
+    .meta{color:#94a3b8}
+    .fab{position:fixed;right:16px;bottom:16px;width:64px;height:64px;border-radius:50%;border:none;font-size:34px;background:#22c55e;color:#052e16}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none}
     .overlay.show{display:block}
-
-    .sheet{position:fixed;left:0;right:0;bottom:0;background:#020617;border-top-left-radius:18px;border-top-right-radius:18px;padding:12px;transform:translateY(110%);transition:transform .2s ease;z-index:20;max-height:90vh;overflow-y:auto}
+    .sheet{position:fixed;left:0;right:0;bottom:0;background:#020617;border-radius:18px 18px 0 0;padding:12px;transform:translateY(110%);transition:.2s;max-height:90vh;overflow:auto}
     .sheet.show{transform:translateY(0)}
-
-    .field{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #0f172a;background:#0b1220;color:#e5e7eb;font-size:16px}
-    .btn{width:100%;padding:12px;margin:10px 0 4px;border-radius:12px;border:none;background:#22c55e;color:#052e16;font-size:16px;font-weight:900;cursor:pointer}
-
-    .drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:#020617;border-right:1px solid #0f172a;transform:translateX(-110%);transition:transform .2s ease;z-index:30;padding:12px}
+    .field{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #0f172a;background:#0b1220;color:#e5e7eb}
+    .btn{width:100%;padding:12px;border-radius:10px;border:none;background:#22c55e;color:#052e16;font-weight:900}
+    .drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:#020617;border-right:1px solid #0f172a;transform:translateX(-110%);transition:.2s;padding:12px}
     .drawer.show{transform:translateX(0)}
-    .drawer .item{padding:10px;border-radius:8px;cursor:pointer}
-    .drawer .item:hover{background:#0b1220}
-
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:900;background:#fb923c;color:#fff;animation:flash 1s infinite}
-    @keyframes flash{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
-
-    .pin-screen{position:fixed;inset:0;background:#020617;display:flex;align-items:center;justify-content:center;z-index:50}
-    .pin-box{background:#0b1220;border:1px solid #0f172a;border-radius:14px;padding:16px;width:90%;max-width:360px}
-
-    .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#22c55e;color:#052e16;
-      padding:10px 14px;border-radius:10px;font-weight:900;display:none;z-index:60}
+    .item{padding:10px;border-radius:8px;cursor:pointer}
+    .item:hover{background:#0b1220}
+    .badge{background:#fb923c;color:#fff;font-weight:900;border-radius:999px;padding:4px 8px}
+    .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#22c55e;color:#052e16;padding:8px 12px;border-radius:8px;font-weight:900;display:none}
     .toast.show{display:block}
   </style>
 </head>
 <body>
-  <!-- PIN -->
-  <div id="pinScreen" class="pin-screen">
-    <div class="pin-box">
-      <h3>Enter PIN</h3>
-      <input id="pinInput" class="field" type="password" placeholder="4-digit PIN" />
-      <button class="btn" onclick="unlock()">Unlock</button>
-      <div id="pinError" class="meta"></div>
-    </div>
-  </div>
-
-  <!-- Drawer -->
   <div id="drawer" class="drawer">
     <div class="item" id="totalBox"></div>
     <div class="item" onclick="openProfile()">My Profile</div>
@@ -77,21 +53,21 @@
   <div id="sheetOverlay" class="overlay" onclick="closeSheet()"></div>
 
   <section id="sheet" class="sheet">
-    <h3 id="sheetTitle">Add My Details</h3>
-    <input class="field" id="UserID" disabled />
-    <input class="field" id="Name" placeholder="Name" />
-    <input class="field" id="Mobile" placeholder="Mobile" />
-    <input class="field" id="DOB" placeholder="D.O.B" />
-    <select class="field" id="Group">
+    <h3 id="sheetTitle">Add / Edit My Details</h3>
+    <input id="UserID" class="field" disabled />
+    <input id="Name" class="field" placeholder="Name" />
+    <input id="Mobile" class="field" placeholder="Mobile" />
+    <input id="DOB" class="field" placeholder="D.O.B" />
+    <select id="Group" class="field">
       <option>BISHUDDHI</option><option>ANAHAT</option><option>MANIPUR</option>
       <option>SWADISTHAN</option><option>MULADHAR</option><option>NANDI</option><option>SAHAJA</option>
     </select>
-    <input class="field" id="State" placeholder="State" />
-    <input class="field" id="District" placeholder="District" />
-    <input class="field" id="Block" placeholder="Block" />
-    <input class="field" id="GPWard" placeholder="GP/Ward" />
-    <input class="field" id="VillageTown" placeholder="Village/Town" />
-    <button class="btn" id="saveBtn" onclick="saveOrUpdate()">Save</button>
+    <input id="State" class="field" placeholder="State" />
+    <input id="District" class="field" placeholder="District" />
+    <input id="Block" class="field" placeholder="Block" />
+    <input id="GPWard" class="field" placeholder="GP/Ward" />
+    <input id="VillageTown" class="field" placeholder="Village/Town" />
+    <button class="btn" onclick="save()">Save</button>
   </section>
 
   <div id="toast" class="toast"></div>
@@ -102,34 +78,25 @@
 
     let UID = localStorage.getItem("DP_UID");
     if(!UID){ UID = "DP-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); localStorage.setItem("DP_UID", UID); }
+    UserID.value = UID;
 
     let ALL = [];
 
-    function toast(msg){
-      const t=document.getElementById("toast");
-      t.innerText=msg; t.classList.add("show");
-      setTimeout(()=>t.classList.remove("show"),1500);
-    }
-
-    function unlock(){ if(pinInput.value===PIN){ pinScreen.style.display="none"; UserID.value=UID; loadMembers(); } else pinError.innerText="Wrong PIN"; }
-    function logout(){ pinScreen.style.display="flex"; closeDrawer(); }
+    function toast(msg){ const t=toastEl; t.innerText=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1500); }
 
     function toggleDrawer(){ drawer.classList.toggle("show"); drawerOverlay.classList.toggle("show"); }
     function closeDrawer(){ drawer.classList.remove("show"); drawerOverlay.classList.remove("show"); }
 
-    function toggleSheet(){ sheet.classList.toggle("show"); sheetOverlay.classList.toggle("show"); UserID.value=UID; history.pushState({sheet:1},""); }
-    function closeSheet(){ sheet.classList.remove("show"); sheetOverlay.classList.remove("show"); if(history.state?.sheet) history.back(); }
-    window.addEventListener("popstate",()=>{ closeSheet(); });
+    function toggleSheet(){ sheet.classList.toggle("show"); sheetOverlay.classList.toggle("show"); }
+    function closeSheet(){ sheet.classList.remove("show"); sheetOverlay.classList.remove("show"); }
 
-    async function loadMembers(){
-      const res = await fetch(API_URL+"?action=list");
-      ALL = await res.json();
+    async function load(){
+      const r = await fetch(API_URL+"?action=list");
+      ALL = await r.json();
       totalBox.innerHTML = `Total Members <span class="badge">${ALL.length}</span>`;
       ALL.sort((a,b)=>(a["Name"]||"").localeCompare(b["Name"]||""));
-
       const groups = {BISHUDDHI:[],ANAHAT:[],MANIPUR:[],SWADISTHAN:[],MULADHAR:[],NANDI:[],SAHAJA:[]};
       ALL.forEach(m=>{ const g=(m["Group"]||"").toUpperCase(); if(groups[g]) groups[g].push(m); });
-
       groupsEl.innerHTML = `
         ${render("BISHUDDHI","g-blue",groups.BISHUDDHI)}
         ${render("ANAHAT","g-green",groups.ANAHAT)}
@@ -143,65 +110,39 @@
 
     function render(title,cls,arr){
       return `<div class="group"><h3 class="${cls}">${title}</h3>` +
-        (arr.map(m=>{
-          const isMe = m["User ID"]===UID;
-          return `<div class="card">
+        (arr.map(m=>`
+          <div class="card">
             <div class="name">${m["Name"]||""}</div>
             <div class="meta">${m["State"]||""}, ${m["District"]||""}, ${m["Block"]||""}, ${m["GP/Ward"]||""}, ${m["Village/Town"]||""}</div>
-            ${isMe ? `<div class="meta">📞 ${m["Mobile"]||""} · 🎂 ${m["D.O.B"]||""}</div>` : ``}
-          </div>`;
-        }).join("") || `<div class="meta">No members</div>`) + `</div>`;
+          </div>`).join("") || `<div class="meta">No members</div>`) + `</div>`;
     }
 
     function openProfile(){
       closeDrawer();
       const me = ALL.find(m=>m["User ID"]===UID);
-      if(!me){ toast("No profile found. Add your details."); return; }
-      sheetTitle.innerText="My Profile";
+      if(!me){ toast("No profile found"); return; }
       Name.value=me["Name"]||""; Mobile.value=me["Mobile"]||""; DOB.value=me["D.O.B"]||""; Group.value=me["Group"]||"";
       State.value=me["State"]||""; District.value=me["District"]||""; Block.value=me["Block"]||""; GPWard.value=me["GP/Ward"]||""; VillageTown.value=me["Village/Town"]||"";
-      saveBtn.innerText="Close"; saveBtn.onclick=()=>closeSheet();
       toggleSheet();
     }
 
-    function openEdit(){
-      closeDrawer();
-      const me = ALL.find(m=>m["User ID"]===UID);
-      sheetTitle.innerText="Edit Profile";
-      if(me){
-        Name.value=me["Name"]||""; Mobile.value=me["Mobile"]||""; DOB.value=me["D.O.B"]||""; Group.value=me["Group"]||"";
-        State.value=me["State"]||""; District.value=me["District"]||""; Block.value=me["Block"]||""; GPWard.value=me["GP/Ward"]||""; VillageTown.value=me["Village/Town"]||"";
-      }
-      saveBtn.innerText="Save Changes"; saveBtn.onclick=updateProfile;
-      toggleSheet();
-    }
+    function openEdit(){ openProfile(); }
 
-    async function saveOrUpdate(){
-      const me = ALL.find(m=>m["User ID"]===UID);
-      if(me) await updateProfile();
-      else await addProfile();
-    }
-
-    async function addProfile(){
-      const payload = collect();
-      await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-      closeSheet(); await loadMembers(); toast("SAVED SUCCESSFULLY");
-    }
-
-    async function updateProfile(){
-      const payload = collect();
-      payload._action = "update";
-      await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-      closeSheet(); await loadMembers(); toast("UPDATED");
-    }
-
-    function collect(){
-      return {"User ID":UID,"Name":Name.value,"Mobile":Mobile.value,"D.O.B":DOB.value,"Group":Group.value,
-              "State":State.value,"District":District.value,"Block":Block.value,"GP/Ward":GPWard.value,"Village/Town":VillageTown.value};
+    async function save(){
+      const payload = {
+        "User ID": UID,"Name":Name.value,"Mobile":Mobile.value,"D.O.B":DOB.value,"Group":Group.value,
+        "State":State.value,"District":District.value,"Block":Block.value,"GP/Ward":GPWard.value,"Village/Town":VillageTown.value
+      };
+      const r = await fetch(API_URL, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload), mode:"cors", credentials:"omit" });
+      if(r.ok){ closeSheet(); await load(); toast("SAVED SUCCESSFULLY"); }
+      else { toast("SAVE FAILED"); }
     }
 
     const groupsEl = document.getElementById("groups");
+    const toastEl = document.getElementById("toast");
+    load();
   </script>
 </body>
 </html>
+
 
